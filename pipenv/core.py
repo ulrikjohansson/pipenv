@@ -2436,6 +2436,15 @@ def do_sync(
     system=False,
     deploy=False,
 ):
+    # The Pipfile is needed b.c the lock-file location is calculated from it.
+    if not project.pipfile_exists:
+        click.echo(
+            "{0}: Pipfile is missing! It's needed in order to find Pipfile.lock.".format(
+                crayons.red("Error", bold=True)
+            ),
+            err=True,
+        )
+        return 1
     # The lock file needs to exist because sync won't write to it.
     if not project.lockfile_exists:
         click.echo(
